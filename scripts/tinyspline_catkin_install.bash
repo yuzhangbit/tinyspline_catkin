@@ -13,6 +13,19 @@ install_prerequisites()
 		build-essential 
 }
 
+update_cmake_to_3_4()
+{
+	# update 3.2 to 3.4 
+	wget http://www.cmake.org/files/v3.4/cmake-3.4.3.tar.gz 
+	tar -xvzf cmake-3.4.3.tar.gz 
+	cd cmake-3.4.3/ 
+	./configure 
+	make 
+	sudo make install
+	update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
+	cd ..
+}
+
 
 
 
@@ -44,4 +57,5 @@ build_omplapp()
 
 
 # RUN
+update_cmake_to_3_4()
 build_omplapp
