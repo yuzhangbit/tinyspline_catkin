@@ -13,7 +13,7 @@ install_prerequisites()
 		build-essential 
 }
 
-update_cmake_to_3_4()
+update_cmake()
 {
 	# update 3.2 to 3.4 
 	wget http://www.cmake.org/files/v3.4/cmake-3.4.3.tar.gz 
@@ -29,7 +29,7 @@ update_cmake_to_3_4()
 
 
 
-build_omplapp()
+build_tinyspline()
 {
 	# setup ros env
 	source $ROS_BASH
@@ -57,5 +57,5 @@ build_omplapp()
 
 
 # RUN
-update_cmake_to_3_4()
-build_omplapp
+update_cmake()
+build_tinyspline
