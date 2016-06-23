@@ -58,4 +58,4 @@ build_tinyspline()
 
 # RUN
 update_cmake()
-build_tinyspline
+build_tinyspline()
