@@ -1,4 +1,3 @@
-set(@PROJECT_NAME@_LIBRARIES
-  @CATKIN_DEVEL_PREFIX@/lib/libtinyspline${CMAKE_SHARED_LIBRARY_SUFFIX}
-  @CATKIN_DEVEL_PREFIX@/lib/libtinysplinecpp${CMAKE_SHARED_LIBRARY_SUFFIX}
-set(@PROJECT_NAME@_INCLUDE_DIR @CATKIN_DEVEL_PREFIX@/include)
+# This overrides the dependency tracker with the g2o library files.
+file(GLOB tinysplineLibraries @CATKIN_DEVEL_PREFIX@/lib/libtinysplinecpp*)
+set( @PROJECT_NAME@_LIBRARIES ${tinysplineLibraries})

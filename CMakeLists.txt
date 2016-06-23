@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tinyspline_catkin)
 
+SET(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -Wfloat-equal -std=c++11 -Wno-uninitialized  -Wno-unused-parameter -Wno-missing-field-initializers -Wno-ignored-qualifiers ${CMAKE_CXX_FLAGS}")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -9,15 +11,25 @@ find_package(catkin_simple REQUIRED)
 catkin_simple()
 
 include(ExternalProject)
+file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include/tinyspline)
 
-file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 ExternalProject_Add(tinyspline_src
         GIT_REPOSITORY https://github.com/retuxx/tinyspline.git
         UPDATE_COMMAND ""
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CATKIN_DEVEL_PREFIX}
-        -DCMAKE_INSTALL_LIBDIR:PATH=${CATKIN_DEVEL_PREFIX}/lib/
-        -DBUILD_SHARED_LIBS:BOOL=true
-        -DCMAKE_BUILD_TYPE:STRING=Release
+        CONFIGURE_COMMAND cd ../tinyspline_src && mkdir -p build && cd build && cmake ../
+        -DCMAKE_INSTALL_PREFIX=${CATKIN_DEVEL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=ON
+        -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+        BUILD_COMMAND cd ../tinyspline_src/build && make
+        INSTALL_COMMAND cd ../tinyspline_src/build/library/ &&
+        cp -r libtinyspline${CMAKE_SHARED_LIBRARY_SUFFIX} ${CATKIN_DEVEL_PREFIX}/lib/ &&
+        cp libtinysplinecpp${CMAKE_SHARED_LIBRARY_SUFFIX} ${CATKIN_DEVEL_PREFIX}/lib/ &&
+        cd ../.. && mkdir -p ${CATKIN_DEVEL_PREFIX}/include/tinyspline &&
+        cd library &&
+        cp -r tinyspline.h ${CATKIN_DEVEL_PREFIX}/include/tinyspline/ &&
+        cp tinysplinecpp.h ${CATKIN_DEVEL_PREFIX}/include/tinyspline/ &&
+        cp debugging.h ${CATKIN_DEVEL_PREFIX}/include/tinyspline/
         )
 
 ## System dependencies are found with CMake's conventions
@@ -26,8 +38,8 @@ ExternalProject_Add(tinyspline_src
 cs_add_library(${PROJECT_NAME} src/dependency_tracker.c)
 add_dependencies(${PROJECT_NAME} tinyspline_src)
 
-target_link_libraries(${PROJECT_NAME} ${CATKIN_DEVEL_PREFIX}/lib/libtinyspline${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CATKIN_DEVEL_PREFIX}/lib/libtinysplinecpp${CMAKE_SHARED_LIBRARY_SUFFIX})
+target_link_libraries(${PROJECT_NAME} ${CATKIN_DEVEL_PREFIX}/lib/libtinysplinecpp${CMAKE_SHARED_LIBRARY_SUFFIX}
+        )
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
