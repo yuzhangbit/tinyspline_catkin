@@ -1,3 +1,0 @@
-# This overrides the dependency tracker with the g2o library files.
-file(GLOB tinysplineLibraries @CATKIN_DEVEL_PREFIX@/lib/libtinysplinecpp*)
-set( @PROJECT_NAME@_LIBRARIES ${tinysplineLibraries})
